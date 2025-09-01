@@ -79,7 +79,7 @@ export default function Main() {
 				<div class="mt-6 space-y-2">
 					<h2 class="text-white font-semibold">Interests</h2>
 					<p class="text-sm leading-relaxed text-slate-300">
-						Food expert. Music scholar. Reader. Internet fanatic. Bacon buff.
+						Food expert. Music scholar. Reader. Internet fanatic. Beef buff.
 						Entrepreneur. Travel geek. Pop culture ninja. Coffee fanatic.
 					</p>
 				</div>
