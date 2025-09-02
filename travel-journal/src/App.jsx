@@ -4,13 +4,14 @@ import SingleJournalCard from "./components/SingleJournalCard";
 import data from "../data.js";
 
 function App() {
-	console.log(data);
+	const entryElements = data.map((entry) => {
+		return <SingleJournalCard key={entry.id} {...entry} />;
+	});
+
 	return (
 		<>
 			<Header />
-			{data.map((entry) => (
-				<SingleJournalCard key={entry.id} {...entry} />
-			))}
+			{entryElements}
 		</>
 	);
 }
