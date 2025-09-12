@@ -1,8 +1,7 @@
 import {useState, useRef} from "react";
 
 export default function Form() {
-	const initialIngredients = ["Chicken", "Salt", "Pepper", "Olive Oil"];
-	const [ingredients, setIngredients] = useState(initialIngredients);
+	const [ingredients, setIngredients] = useState([]);
 	const [error, setError] = useState("");
 	const errorTimeoutRef = useRef();
 	const inputRef = useRef();
