@@ -6,18 +6,20 @@ export default function Form() {
 	const errorTimeoutRef = useRef();
 	const inputRef = useRef();
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		const value = inputRef.current.value.trim();
-		if (value === "") return;
-		if (ingredients.map((i) => i.toLowerCase()).includes(value.toLowerCase())) {
-			setError(`Ingredient "${value}" is already in the list.`);
+	const addIngredient = (formData) => {
+		const addField = Object.fromEntries(formData)["add-ingredient"].trim();
+		console.log(addField);
+		if (addField === "") return;
+		if (
+			ingredients.map((i) => i.toLowerCase()).includes(addField.toLowerCase())
+		) {
+			setError(`Ingredient "${addField}" is already in the list.`);
 			if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current);
 			errorTimeoutRef.current = setTimeout(() => {
 				setError("");
 			}, 3000);
 		} else {
-			setIngredients([...ingredients, value]);
+			setIngredients([...ingredients, addField]);
 			setError("");
 			if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current);
 		}
@@ -28,13 +30,14 @@ export default function Form() {
 		<main className="w-3xl px-2.5 py-8">
 			<form
 				className="flex gap-[12px] justify-center items-center"
-				onSubmit={handleSubmit}
+				action={addIngredient}
 			>
 				<input
 					ref={inputRef}
 					className="border border-gray-300 rounded-md p-2 shadow-xl grow"
 					aria-label="Add ingredient"
 					type="text"
+					name="add-ingredient"
 					placeholder="e.g. oregano"
 				/>
 				<button className="before:content-['+_'] bg-black text-white rounded-md px-8 py-2 shadow-xl">
