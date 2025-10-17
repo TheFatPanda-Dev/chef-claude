@@ -1,8 +1,12 @@
 import {useState, useRef} from "react";
+import IngredientsList from "./IngredientsList";
+import ClaudeRecipe from "./ClaudeRecipe";
+import RecipeDisplay from "./RecipeDisplay";
 
 export default function Form() {
 	const [ingredients, setIngredients] = useState([]);
 	const [error, setError] = useState("");
+	const [recipeShown, setRecipeShown] = useState(false);
 	const errorTimeoutRef = useRef();
 	const inputRef = useRef();
 
@@ -24,6 +28,10 @@ export default function Form() {
 			if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current);
 		}
 		inputRef.current.value = "";
+	};
+
+	const toggleRecipeShown = () => {
+		setRecipeShown(!recipeShown);
 	};
 
 	return (
@@ -74,36 +82,13 @@ export default function Form() {
 
 			{ingredients.length > 0 && (
 				<div>
-					<h2 className="text-4xl font-bold mt-8 mb-4">Ingredients on hand:</h2>
-					<ul className="list-inside">
-						{ingredients.map((ingredient) => (
-							<li
-								key={ingredient}
-								className="py-2 list-disc text-gray-600 capitalize"
-							>
-								{ingredient}
-							</li>
-						))}
-					</ul>
+					<IngredientsList ingredients={ingredients} />
 
 					{ingredients.length > 3 && (
-						<div className="flex justify-between items-center rounded-lg bg-[#F0EFEB] mt-10 px-7 py-7">
-							<div>
-								<h3 className="text-[1.125rem] font-medium leading-6 mb-2">
-									Ready for a recipe?
-								</h3>
-								<p className="text-gray-500 text-sm leading-5">
-									Generate a recipe from your list of ingredients.
-								</p>
-							</div>
-							<button
-								className="border-none rounded-md bg-[#D17557] shadow-sm text-[#FAFAF8] px-4 py-2 font-sans text-sm cursor-pointer"
-								type="button"
-							>
-								Get a recipe
-							</button>
-						</div>
+						<ClaudeRecipe ingredients={ingredients} toggleRecipeShown={toggleRecipeShown} />
 					)}
+
+					{recipeShown && <RecipeDisplay />}
 				</div>
 			)}
 		</main>
