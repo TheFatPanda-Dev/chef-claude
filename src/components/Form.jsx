@@ -1,4 +1,4 @@
-import {useState, useRef} from "react";
+import {useState, useRef, useEffect} from "react";
 import IngredientsList from "./IngredientsList";
 import ClaudeRecipe from "./ClaudeRecipe";
 import RecipeDisplay from "./RecipeDisplay";
@@ -9,6 +9,7 @@ export default function Form() {
 	const [recipeShown, setRecipeShown] = useState(false);
 	const errorTimeoutRef = useRef();
 	const inputRef = useRef();
+	const recipeRef = useRef();
 
 	const addIngredient = (formData) => {
 		const addField = Object.fromEntries(formData)["add-ingredient"].trim();
@@ -33,6 +34,19 @@ export default function Form() {
 	const toggleRecipeShown = () => {
 		setRecipeShown(!recipeShown);
 	};
+
+	// Auto-scroll to recipe when it's shown
+	useEffect(() => {
+		if (recipeShown && recipeRef.current) {
+			// Small delay to ensure the component has rendered
+			setTimeout(() => {
+				recipeRef.current.scrollIntoView({
+					behavior: "smooth",
+					block: "start",
+				});
+			}, 100);
+		}
+	}, [recipeShown]);
 
 	return (
 		<main className="w-3xl px-2.5 py-8">
@@ -85,10 +99,17 @@ export default function Form() {
 					<IngredientsList ingredients={ingredients} />
 
 					{ingredients.length > 3 && (
-						<ClaudeRecipe ingredients={ingredients} toggleRecipeShown={toggleRecipeShown} />
+						<ClaudeRecipe
+							ingredients={ingredients}
+							toggleRecipeShown={toggleRecipeShown}
+						/>
 					)}
 
-					{recipeShown && <RecipeDisplay />}
+					{recipeShown && (
+						<div ref={recipeRef}>
+							<RecipeDisplay />
+						</div>
+					)}
 				</div>
 			)}
 		</main>

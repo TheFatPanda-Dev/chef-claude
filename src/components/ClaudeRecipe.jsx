@@ -1,4 +1,4 @@
-export default function ClaudeRecipe({ ingredients, toggleRecipeShown }) {
+export default function ClaudeRecipe({ toggleRecipeShown }) {
 	return (
 		<section className="flex justify-between items-center rounded-lg bg-[#F0EFEB] mt-10 px-7 py-7">
 			<div>
@@ -12,7 +12,7 @@ export default function ClaudeRecipe({ ingredients, toggleRecipeShown }) {
 			<button
 				className="border-none rounded-md bg-[#D17557] shadow-sm text-[#FAFAF8] px-4 py-2 font-sans text-sm cursor-pointer"
 				type="button"
-                onClick={toggleRecipeShown}
+				onClick={toggleRecipeShown}
 			>
 				Get a recipe
 			</button>
