@@ -9,6 +9,7 @@ export default function Form() {
 	const [error, setError] = useState("");
 	const [recipeShown, setRecipeShown] = useState(false);
 	const [recipe, setRecipe] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
 	const errorTimeoutRef = useRef();
 	const inputRef = useRef();
 	const recipeRef = useRef();
@@ -34,15 +35,14 @@ export default function Form() {
 	};
 
 	const getRecipe = async () => {
-		setRecipeShown(!recipeShown);
-
-		if (!recipeShown) {
-			try {
-				const recipeText = await getRecipeFromChefClaude(ingredients);
-				setRecipe(recipeText);
-			} catch (error) {
-				console.error("Error getting recipe:", error);
-			}
+		console.log("Generating recipe...");
+		setRecipeShown(true);
+		try {
+			const recipeText = await getRecipeFromChefClaude(ingredients);
+			setRecipe(recipeText);
+			console.log("Recipe generated successfully");
+		} catch (error) {
+			console.error("Error getting recipe:", error);
 		}
 	};
 
@@ -110,12 +110,20 @@ export default function Form() {
 					<IngredientsList ingredients={ingredients} />
 
 					{ingredients.length > 3 && (
-						<ClaudeRecipe ingredients={ingredients} getRecipe={getRecipe} />
+						<ClaudeRecipe
+							getRecipe={getRecipe}
+							recipeShown={recipeShown}
+						/>
 					)}
 
 					{recipeShown && (
 						<div ref={recipeRef}>
-							<RecipeDisplay recipe={recipe} />
+							<RecipeDisplay
+								recipe={recipe}
+								setRecipe={setRecipe}
+								setIngredients={setIngredients}
+								setRecipeShown={setRecipeShown}
+							/>
 						</div>
 					)}
 				</div>
