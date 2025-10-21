@@ -60,28 +60,28 @@ export default function Form() {
 	}, [recipeShown]);
 
 	return (
-		<main className="w-3xl px-2.5 py-8">
+		<main className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
 			<form
-				className="flex gap-[12px] justify-center items-center"
+				className="flex flex-col sm:flex-row gap-3 sm:gap-[12px] justify-center items-stretch sm:items-center"
 				action={addIngredient}
 			>
 				<input
 					ref={inputRef}
-					className="border border-gray-300 rounded-md p-2 shadow-xl grow"
+					className="border border-gray-300 rounded-md p-3 sm:p-2 shadow-xl grow text-base"
 					aria-label="Add ingredient"
 					type="text"
 					name="add-ingredient"
 					placeholder="e.g. oregano"
 				/>
-				<button className="before:content-['+_'] bg-black text-white rounded-md px-8 py-2 shadow-xl">
+				<button className="before:content-['+_'] bg-black text-white rounded-md px-6 py-3 sm:px-8 sm:py-2 shadow-xl whitespace-nowrap">
 					Add ingredient
 				</button>
 			</form>
 			{error && (
-				<div className="bg-orange-200 px-6 py-4 my-4 rounded-md text-lg flex items-center mx-auto max-w-lg">
+				<div className="bg-orange-200 px-4 sm:px-6 py-3 sm:py-4 my-4 rounded-md text-base sm:text-lg flex flex-col sm:flex-row items-start sm:items-center mx-auto max-w-lg">
 					<svg
 						viewBox="0 0 24 24"
-						className="text-yellow-600 w-5 h-5 mr-3"
+						className="text-yellow-600 w-5 h-5 mr-0 sm:mr-3 mb-2 sm:mb-0 flex-shrink-0"
 						aria-hidden="true"
 					>
 						<path
@@ -93,7 +93,7 @@ export default function Form() {
 					<button
 						type="button"
 						aria-label="Dismiss error"
-						className="ml-2 px-2 text-yellow-700 font-bold bg-transparent border-none cursor-pointer text-xl"
+						className="ml-0 sm:ml-2 mt-2 sm:mt-0 px-2 text-yellow-700 font-bold bg-transparent border-none cursor-pointer text-xl self-end sm:self-auto"
 						onClick={() => {
 							setError("");
 							if (errorTimeoutRef.current)
@@ -110,10 +110,7 @@ export default function Form() {
 					<IngredientsList ingredients={ingredients} />
 
 					{ingredients.length > 3 && (
-						<ClaudeRecipe
-							getRecipe={getRecipe}
-							recipeShown={recipeShown}
-						/>
+						<ClaudeRecipe getRecipe={getRecipe} recipeShown={recipeShown} />
 					)}
 
 					{recipeShown && (

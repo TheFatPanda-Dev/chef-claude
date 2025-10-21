@@ -1,9 +1,13 @@
-import ChefClaudeLogo from "../assets/images/chef-claude-logo.png"
+import ChefClaudeLogo from "../assets/images/chef-claude-logo.png";
 
 function Header() {
 	return (
-		<header className="flex items-center justify-center shadow-md w-3xl h-[108px]">
-			<img src={ChefClaudeLogo} alt="Chef Claude Logo" />
+		<header className="flex items-center justify-center shadow-md w-full max-w-4xl mx-auto h-20 sm:h-[108px] px-4">
+			<img
+				src={ChefClaudeLogo}
+				alt="Chef Claude Logo"
+				className="h-12 sm:h-auto max-w-full object-contain"
+			/>
 		</header>
 	);
 }
