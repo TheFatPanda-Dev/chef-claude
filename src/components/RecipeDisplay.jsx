@@ -11,13 +11,12 @@ export default function RecipeDisplay({
 
 	// Function to process markdown and reorder content
 	const processMarkdown = (markdownText) => {
-		if (!markdownText) return "";
+		if (!markdownText) return {processedText: "", mainTitleLevel: null};
 
 		const lines = markdownText.split("\n");
 		let mainTitle = "";
 		let mainTitleLevel = 7; // Start with a high number
 		let processedLines = [];
-		let foundMainTitle = false;
 
 		// First pass: find the title with fewest '#' symbols
 		for (let line of lines) {
@@ -46,19 +45,32 @@ export default function RecipeDisplay({
 			}
 		} else {
 			// If no title found, return original
-			return markdownText;
+			return {processedText: markdownText, mainTitleLevel: null};
 		}
 
-		return processedLines.join("\n");
+		return {
+			processedText: processedLines.join("\n"),
+			mainTitleLevel: mainTitleLevel < 7 ? mainTitleLevel : null,
+		};
 	};
 
-	const processedRecipe = processMarkdown(recipe);
+	const {processedText: processedRecipe, mainTitleLevel} =
+		processMarkdown(recipe);
 	const markdownComponents = {
-		h1: ({children}) => (
-			<h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-6 text-center pb-2 border-b border-gray-300">
-				{children}
-			</h1>
-		),
+		h1: ({children}) => {
+			const isMainTitle = mainTitleLevel === 1;
+			return (
+				<h1
+					className={`font-bold mb-4 sm:mb-6 text-center pb-2 border-b border-gray-300 ${
+						isMainTitle
+							? "text-3xl text-orange-600"
+							: "text-2xl sm:text-3xl text-gray-800"
+					}`}
+				>
+					{children}
+				</h1>
+			);
+		},
 		h2: ({children}) => {
 			const text = children.toString().toLowerCase();
 			const isIngredients = text.includes("ingredient");
@@ -66,8 +78,15 @@ export default function RecipeDisplay({
 				text.includes("instruction") ||
 				text.includes("step") ||
 				text.includes("direction");
+			const isMainTitle = mainTitleLevel === 2;
 
-			if (isIngredients) {
+			if (isMainTitle) {
+				return (
+					<h2 className="text-3xl font-bold text-orange-600 mb-4 sm:mb-6 text-center pb-2 border-b border-gray-300">
+						{children}
+					</h2>
+				);
+			} else if (isIngredients) {
 				return (
 					<h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 mt-6 sm:mt-8 text-green-800 flex items-center">
 						🥄 {children}
@@ -94,8 +113,15 @@ export default function RecipeDisplay({
 				text.includes("instruction") ||
 				text.includes("step") ||
 				text.includes("direction");
+			const isMainTitle = mainTitleLevel === 3;
 
-			if (isIngredients) {
+			if (isMainTitle) {
+				return (
+					<h3 className="text-3xl font-bold text-orange-600 mb-4 sm:mb-6 text-center pb-2 border-b border-gray-300">
+						{children}
+					</h3>
+				);
+			} else if (isIngredients) {
 				return (
 					<h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 mt-4 sm:mt-6 text-green-800 flex items-center">
 						🥄 {children}
@@ -139,14 +165,59 @@ export default function RecipeDisplay({
 		strong: ({children}) => (
 			<strong className="text-orange-600 font-semibold">{children}</strong>
 		),
+		h4: ({children}) => {
+			const isMainTitle = mainTitleLevel === 4;
+			if (isMainTitle) {
+				return (
+					<h4 className="text-3xl font-bold text-orange-600 mb-4 sm:mb-6 text-center pb-2 border-b border-gray-300">
+						{children}
+					</h4>
+				);
+			}
+			return (
+				<h4 className="text-base sm:text-lg font-bold mt-3 sm:mt-4 mb-2 text-gray-800">
+					{children}
+				</h4>
+			);
+		},
+		h5: ({children}) => {
+			const isMainTitle = mainTitleLevel === 5;
+			if (isMainTitle) {
+				return (
+					<h5 className="text-3xl font-bold text-orange-600 mb-4 sm:mb-6 text-center pb-2 border-b border-gray-300">
+						{children}
+					</h5>
+				);
+			}
+			return (
+				<h5 className="text-sm sm:text-base font-bold mt-2 sm:mt-3 mb-1 text-gray-800">
+					{children}
+				</h5>
+			);
+		},
+		h6: ({children}) => {
+			const isMainTitle = mainTitleLevel === 6;
+			if (isMainTitle) {
+				return (
+					<h6 className="text-3xl font-bold text-orange-600 mb-4 sm:mb-6 text-center pb-2 border-b border-gray-300">
+						{children}
+					</h6>
+				);
+			}
+			return (
+				<h6 className="text-xs sm:text-sm font-bold mt-2 mb-1 text-gray-800">
+					{children}
+				</h6>
+			);
+		},
 	};
 
 	return (
-		<section className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
-			<h2 className="text-2xl sm:text-4xl font-bold text-gray-800 text-center mb-6 sm:mb-8 pb-3 sm:pb-4 border-b-2 border-orange-400">
+		<section className="w-full px-4 sm:px-6 py-4 sm:py-8">
+			<h2 className="text-2xl sm:text-4xl font-bold text-gray-800 text-center mb-6 sm:mb-8 pb-3 sm:pb-4 border-b-2 border-orange-400 max-w-4xl mx-auto">
 				🍽️ Chef Claude Recommends
 			</h2>
-			<article className="bg-white rounded-xl shadow-lg p-4 sm:p-8 border border-gray-200">
+			<article className="bg-white rounded-xl shadow-lg p-4 sm:p-8 border border-gray-200 max-w-4xl mx-auto">
 				{recipe ? (
 					<div>
 						{/* Toggle Button */}
@@ -193,7 +264,7 @@ export default function RecipeDisplay({
 					</div>
 				)}
 			</article>
-			<div className="text-center sm:text-right mt-6 sm:mt-8">
+			<div className="text-center sm:text-right mt-6 sm:mt-8 max-w-4xl mx-auto">
 				<button
 					className="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 rounded-lg px-4 sm:px-6 py-2.5 transition-colors duration-200 shadow-sm hover:shadow-md font-medium w-full sm:w-auto"
 					onClick={() => {

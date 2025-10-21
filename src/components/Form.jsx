@@ -60,9 +60,9 @@ export default function Form() {
 	}, [recipeShown]);
 
 	return (
-		<main className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
+		<main className="w-full px-4 sm:px-6 py-4 sm:py-8">
 			<form
-				className="flex flex-col sm:flex-row gap-3 sm:gap-[12px] justify-center items-stretch sm:items-center"
+				className="flex flex-col sm:flex-row gap-3 sm:gap-[12px] justify-center items-stretch sm:items-center max-w-4xl mx-auto"
 				action={addIngredient}
 			>
 				<input
