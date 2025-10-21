@@ -2,11 +2,13 @@ import {useState, useRef, useEffect} from "react";
 import IngredientsList from "./IngredientsList";
 import ClaudeRecipe from "./ClaudeRecipe";
 import RecipeDisplay from "./RecipeDisplay";
+import {getRecipeFromChefClaude} from "../ai";
 
 export default function Form() {
 	const [ingredients, setIngredients] = useState([]);
 	const [error, setError] = useState("");
 	const [recipeShown, setRecipeShown] = useState(false);
+	const [recipe, setRecipe] = useState("");
 	const errorTimeoutRef = useRef();
 	const inputRef = useRef();
 	const recipeRef = useRef();
@@ -31,8 +33,17 @@ export default function Form() {
 		inputRef.current.value = "";
 	};
 
-	const toggleRecipeShown = () => {
+	const getRecipe = async () => {
 		setRecipeShown(!recipeShown);
+
+		if (!recipeShown) {
+			try {
+				const recipeText = await getRecipeFromChefClaude(ingredients);
+				setRecipe(recipeText);
+			} catch (error) {
+				console.error("Error getting recipe:", error);
+			}
+		}
 	};
 
 	// Auto-scroll to recipe when it's shown
@@ -99,15 +110,12 @@ export default function Form() {
 					<IngredientsList ingredients={ingredients} />
 
 					{ingredients.length > 3 && (
-						<ClaudeRecipe
-							ingredients={ingredients}
-							toggleRecipeShown={toggleRecipeShown}
-						/>
+						<ClaudeRecipe ingredients={ingredients} getRecipe={getRecipe} />
 					)}
 
 					{recipeShown && (
 						<div ref={recipeRef}>
-							<RecipeDisplay />
+							<RecipeDisplay recipe={recipe} />
 						</div>
 					)}
 				</div>
